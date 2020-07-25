@@ -39,4 +39,53 @@ public class KClosestPointstoOrigin973 {
         res += array[1] * array[1];
         return res;
     }
+
+
+    public int[][] kClosest(int[][] points, int K) {
+        helper(points, K, 0, points.length - 1);
+        return Arrays.copyOfRange(points, 0, K);
+    }
+
+    private void helper(int[][] points, int K, int left, int right) {
+        if (left >= right) {
+            return;
+        }
+        int pivotIndex = left + (int)(Math.random() * (right - left + 1));
+        int pivot = getDistance(points[pivotIndex]);
+        swap(points, pivotIndex, right);
+        int leftIndex = left;
+        int rightIndex = right - 1;
+        while (leftIndex <= rightIndex) {
+            if (getDistance(points[leftIndex]) < pivot) {
+                leftIndex++;
+            }
+            else if (getDistance(points[rightIndex]) >= pivot) {
+                rightIndex--;
+            }
+            else {
+                swap(points, leftIndex++, rightIndex--);
+            }
+        }
+        swap(points, leftIndex, right);
+        if (K == leftIndex) {
+            return;
+        }
+        else if (K > leftIndex) {
+            helper(points, K, leftIndex + 1, right);
+        }
+        helper(points, K, left, leftIndex - 1);
+    }
+
+    private void swap(int[][] points, int left, int right) {
+        int temp1 = points[left][0];
+        int temp2 = points[left][1];
+        points[left][0] = points[right][0];
+        points[left][1] = points[right][1];
+        points[right][0] = temp1;
+        points[right][1] = temp2;
+    }
+
+    private int getDistance(int[] array) {
+        return array[0] * array[0] + array[1] * array[1];
+    }
 }
